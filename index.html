@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operation: Juggernaut</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span>Operation</span>JUGGERNAUT</div>
+  <div class="status">
+    <span id="turnLabel" class="turn">—</span>
+    <span id="phaseLabel" class="phase">Ready</span>
+    <span id="whoLabel" class="who"></span>
+  </div>
+  <div class="actions">
+    <button id="btnEndPhase" class="primary" disabled>End Phase</button>
+    <button id="btnSound">Sound on</button>
+    <button id="btnHelp">Rules</button>
+    <button id="btnMenu">Menu</button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="board">
+    <canvas id="board"></canvas>
+    <div id="tooltip" class="tooltip hidden"></div>
+    <div id="toast" class="toast"></div>
+    <div id="banner" class="banner hidden"></div>
+  </section>
+  <aside class="sidebar">
+    <div class="panel" id="ogrePanel"></div>
+    <div class="panel" id="actionPanel"></div>
+    <div class="panel logpanel"><h3>Combat log</h3><ol id="log"></ol></div>
+  </aside>
+</main>
+
+<div id="menu" class="modal">
+  <div class="card menu">
+    <div class="title">
+      <div class="kicker">Operation:</div>
+      <h1>JUGGERNAUT</h1>
+      <p>A self-aware siege tank the size of a city block is rolling toward your command post. It does not stop.</p>
+    </div>
+    <fieldset>
+      <legend>Mode</legend>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="mode" value="def" checked><span><b>Hold the line</b><small>You command the defense against the computer's Juggernaut.</small></span></label>
+        <label class="choice"><input type="radio" name="mode" value="ogre"><span><b>Be the Juggernaut</b><small>You drive the war machine. The computer defends.</small></span></label>
+        <label class="choice"><input type="radio" name="mode" value="hotseat"><span><b>Hotseat</b><small>Two players, one screen.</small></span></label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Juggernaut</legend>
+      <div class="choices two">
+        <label class="choice"><input type="radio" name="ogreType" value="mk3" checked><span><b>J-3</b><small>Standard scenario. 45 treads, 2 missiles. Defense: 12 armor + 18 squads.</small></span></label>
+        <label class="choice"><input type="radio" name="ogreType" value="mk5"><span><b>J-5</b><small>The heavy variant. 60 treads, 6 missiles. Defense: 20 armor + 30 squads.</small></span></label>
+      </div>
+    </fieldset>
+    <div class="seedrow">
+      <label for="seed">Battlefield #</label><input id="seed" type="number" min="1" max="99999">
+      <button id="btnReroll" type="button">Randomize</button>
+    </div>
+    <div class="row end">
+      <button id="btnResume" hidden>Resume</button>
+      <button id="btnContinue" hidden>Continue saved battle</button>
+      <button id="btnStart" class="primary big">Start battle</button>
+    </div>
+  </div>
+</div>
+
+<div id="help" class="modal hidden">
+  <div class="card help">
+    <button class="close" data-close aria-label="Close">×</button>
+    <h2>How to play</h2>
+    <p><b>Goal.</b> The Juggernaut wins by destroying the Command Post (any hit kills it, or it can simply roll over it). A <i>total</i> victory means it also escapes back off the east edge. The defense wins by immobilizing the Juggernaut before it gets there.</p>
+    <h4>Turn sequence</h4>
+    <ol>
+      <li><b>Juggernaut moves</b> — up to 3 hexes (fewer as treads are lost). Entering a hex with armor <b>rams</b> it: the unit is destroyed, the Juggernaut loses 1 tread (2 for a Heavy Tank). Running over infantry crushes one squad.</li>
+      <li><b>Juggernaut fires</b> — each weapon once. Weapons can combine on one target. Missiles are one-shot. AP guns only hit infantry and the CP.</li>
+      <li><b>Defense moves</b>, then <b>fires</b> — units can combine fire on one Juggernaut system. Shots at treads are always 1:1; a hit removes treads equal to that unit's attack.</li>
+      <li><b>Hovertanks move again</b> (3 MP) — shoot and scoot.</li>
+    </ol>
+    <h4>Combat</h4>
+    <p>Compare attack to defense, round down to odds, roll a die. <b>X</b> destroys, <b>D</b> disables (unit skips its next turn; a second D destroys it; infantry lose a squad instead). Juggernaut systems ignore D. Worse than 1:2 can't hurt; 6:1 or better is automatic.</p>
+    <table id="crt" class="crt"></table>
+    <h4>Units</h4>
+    <table id="unitTable" class="units"></table>
+    <p class="dim">Terrain: craters are impassable; rubble costs armor 2 MP. Hover any unit to see its range. Right-click or Esc clears a selection; Enter ends the phase.</p>
+    <p class="dim small">A tribute to the classic microarmor board and computer wargames of the late '70s and '80s.</p>
+  </div>
+</div>
+
+<script src="js/hex.js"></script>
+<script src="js/rules.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/render.js"></script>
+<script src="js/game.js"></script>
+<script src="js/ai.js"></script>
+</body>
+</html>
